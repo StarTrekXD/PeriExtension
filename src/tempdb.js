@@ -3,7 +3,7 @@ class TempDB {
     constructor({
         intervalDuration = 3600 // 1 hours \ 3600 second
     }) {
-        this.json = new peri.JsonSerializer()
+        this.json = new JsonSerializer()
         setInterval(() => this.json = new JsonSerializer(), intervalDuration * 1000)
     }
 
