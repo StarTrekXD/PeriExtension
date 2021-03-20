@@ -13,7 +13,7 @@ class TempDB {
     }
 
     on(type, callback) {
-        this.events[type].push(listener);
+        this.events[type].push(callback);
     }
 
     get(name) {
