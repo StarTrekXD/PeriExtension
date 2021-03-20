@@ -9,6 +9,7 @@ class TempDB {
     }
 
     on(type, callback) {
+        this.events[type] = this.events[type] || [];
         this.events[type].push(callback);
     }
 
