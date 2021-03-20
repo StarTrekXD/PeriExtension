@@ -1,42 +1,25 @@
 const JsonSerializer = require("./jsonserializer")
-class TempDB {
+const eventemitter = require("./eventemitter")
+class TempDB extends eventemitter {
     constructor({
         intervalDuration = 3600 // 1 hours \ 3600 second
     }) {
-        this.events = {};
         this.json = new JsonSerializer()
         setInterval(() => {
-            if (this.events["reset"]) {
-                this.events["reset"].forEach(a => {
-                    a(this.json.json);
-                });
-            }
+            this.emit("reset", this.json.json)
             this.json = new JsonSerializer();
         }, intervalDuration * 1000)
     }
 
-    on(type, callback) {
-        this.events[type] = this.events[type] || [];
-        this.events[type].push(callback);
-        return this
-    }
-
     reset() {
-        this.events.reset.forEach(a => {
-            a(this.json.json);
-        });
+        this.emit("reset", this.json.json)
         this.json = new JsonSerializer();
     }
 
     get(name) {
-        var dei=this.json.get(name);
-        if (this.events["get"]) {
-            this.events["get"].forEach(c => {
-                c(name,dei);
-            });
-        }
+        var dei = this.json.get(name);
+        this.emit("get", name, dei)
         return dei
-
     }
     has(a) {
         return this.json.has(a)
@@ -44,47 +27,27 @@ class TempDB {
 
     set(name, value) {
         this.json.set(name, value)
-        if (this.events["set"]) {
-            this.events["set"].forEach(a => {
-                a(name, value);
-            });
-        }
+        this.emit("set", name, value)
     }
 
     delete(a) {
         this.json.delete(a)
-        if (this.events["delete"]) {
-            this.events["delete"].forEach(c => {
-                c(a);
-            });
-        }
+        this.emit("delete", a)
     }
 
     push(a, b) {
         this.json.push(a, b)
-        if (this.events["push"]) {
-            this.events["push"].forEach(c => {
-                c(a, b);
-            });
-        }
+        this.emit("push", a, b)
     }
 
     add(a, b) {
         this.json.add(a, b)
-        if (this.events["add"]) {
-            this.events["add"].forEach(c => {
-                c(a, b);
-            });
-        }
+        this.emit("add", a, b)
     }
 
     elementdelete(a, b) {
         this.json.elementdelete(a, b)
-        if (this.events["elementdelete"]) {
-            this.events["elementdelete"].forEach(c => {
-                c(a, b);
-            });
-        }
+        this.emit("elementdelete", a, b)
     }
 
     size() {
