@@ -4,16 +4,16 @@ class TempDB {
         intervalDuration = 3600 // 1 hours \ 3600 second
     }) {
         this.events = {}
-        setInterval(() => {
-            this.events["reset"].forEach(a => {
-                a(this.json.toJSON());
-            });
-            this.json = new JsonSerializer();
-        }, intervalDuration * 1000)
+        this.json = new JsonSerializer()
+        setInterval(reset, intervalDuration * 1000)
     }
 
     on(type, callback) {
         this.events[type].push(callback);
+    }
+
+    reset() {
+        reset()
     }
 
     get(name) {
@@ -51,6 +51,13 @@ class TempDB {
     length() {
         return Object.keys(this.json.json).length
     }
+}
+
+function reset() {
+    this.events["reset"].forEach(a => {
+        a(this.json.toJSON());
+    });
+    this.json = new JsonSerializer();
 }
 
 module.exports = TempDB;
