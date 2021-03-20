@@ -1,5 +1,4 @@
 const JsonSerializer = require("./jsonserializer")
-const Convert = require("./convert")
 class TempDB {
     constructor({
         intervalDuration = 3600 // 1 hours \ 3600 second
@@ -8,7 +7,7 @@ class TempDB {
         this.json = new JsonSerializer()
         setInterval(() => {
             this.events.reset.forEach(a => {
-                a(Convert.Code(this.json.json));
+                a(this.json.json);
             });
             this.json = new JsonSerializer();
         }, intervalDuration * 1000)
@@ -21,7 +20,7 @@ class TempDB {
 
     reset() {
         this.events.reset.forEach(a => {
-            a(Convert.Code(this.json.json));
+            a(this.json.json);
         });
         this.json = new JsonSerializer();
     }
